@@ -19,8 +19,9 @@
     <string name="button_back">&lt;</string>
     <string name="button_proc">%</string>
     <string name="button_equal">=</string>
-    <color name="white">#FFFFFF</color>
-    <color name="background_color">#000000</color>
-    <color name="border_color">#000000</color>
+    <string name="theme1">Theme1</string>
+    <string name="theme2">Theme2</string>
+
+
 
 </resources>
