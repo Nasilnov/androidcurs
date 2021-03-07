@@ -1,10 +1,13 @@
 package ru.tikhvin.city.android.androidl1;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +15,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 
 public class CalcActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private static final String prefs = "prefs.xml";
+    private static final String pref_name = "theme";
 
     public static final String CALC_PREFIX = CalcActivity.class.getCanonicalName();
     public static final String CALC_ARG1 = CALC_PREFIX + ".AGR1";
@@ -30,7 +36,30 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        boolean isActiveBar = getSharedPreferences(prefs, MODE_PRIVATE).
+                getBoolean(pref_name, false);
+        if (isActiveBar) {
+            setTheme(R.style.Theme1);
+        } else {
+            setTheme(R.style.Theme2);
+        }
+
+
         setContentView(R.layout.keyboard_linear);
+
+        Switch themeSwitch = findViewById(R.id.switch_theme);
+        themeSwitch.setOnCheckedChangeListener(
+                (CompoundButton buttonView, boolean isChecked) -> {
+                    SharedPreferences sharedPreferences = getSharedPreferences(prefs, MODE_PRIVATE);
+                    if (sharedPreferences.getBoolean(pref_name, false) != isChecked) {
+                        sharedPreferences.edit().
+                                putBoolean(pref_name, isChecked).apply();
+                        recreate();
+                    }
+                });
+
+
         mAllButtons = ((LinearLayout) findViewById(R.id.button_container)).getTouchables();
         for (int i = 0; i < mAllButtons.size(); i++) {
             mAllButtons.get(i).setOnClickListener(this);
