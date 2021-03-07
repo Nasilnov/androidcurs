@@ -2,5 +2,6 @@
 <resources>
     <dimen name="key_text_size">20sp</dimen>
     <dimen name="key_text_size_small">12sp</dimen>
-    <dimen name="button_margin">1dp</dimen>
+    <dimen name="button_margin">3dp</dimen>
+    <dimen name="button_margin_landscape">1dp</dimen>
 </resources>

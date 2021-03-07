@@ -1,5 +1,6 @@
 package ru.tikhvin.city.android.androidl1;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +19,10 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String prefs = "prefs.xml";
     private static final String pref_name = "theme";
+    private static boolean isActiveBar = false;
+
+    public static final String KEY_NAME = "our.setting";
+    public static final int CODE_SETTING = 99;
 
     public static final String CALC_PREFIX = CalcActivity.class.getCanonicalName();
     public static final String CALC_ARG1 = CALC_PREFIX + ".AGR1";
@@ -25,9 +30,11 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
     public static final String CALC_OPERATOR = CALC_PREFIX + ".OPERATOR";
     public static final String CALC_FLAG = CALC_PREFIX + ".FLAG";
     public static final String CALC_RESULT = CALC_PREFIX + ".RESULT";
+    public static final String CALC_EXPR = CALC_PREFIX + ".EXPR";
 
     ArrayList<View> mAllButtons;
     protected TextView mResult;
+    protected TextView mExrp;
     private  String mArg1 = "";
     private  String mArg2 = "";
     private  String mOperator = "";
@@ -37,8 +44,8 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        boolean isActiveBar = getSharedPreferences(prefs, MODE_PRIVATE).
-                getBoolean(pref_name, false);
+        isActiveBar = getSharedPreferences(prefs, MODE_PRIVATE).
+            getBoolean(pref_name, false);
         if (isActiveBar) {
             setTheme(R.style.Theme1);
         } else {
@@ -48,24 +55,32 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.keyboard_linear);
 
-        Switch themeSwitch = findViewById(R.id.switch_theme);
-        themeSwitch.setOnCheckedChangeListener(
-                (CompoundButton buttonView, boolean isChecked) -> {
-                    SharedPreferences sharedPreferences = getSharedPreferences(prefs, MODE_PRIVATE);
-                    if (sharedPreferences.getBoolean(pref_name, false) != isChecked) {
-                        sharedPreferences.edit().
-                                putBoolean(pref_name, isChecked).apply();
-                        recreate();
-                    }
-                });
-
-
         mAllButtons = ((LinearLayout) findViewById(R.id.button_container)).getTouchables();
         for (int i = 0; i < mAllButtons.size(); i++) {
             mAllButtons.get(i).setOnClickListener(this);
         }
         mResult = findViewById(R.id.result);
+        mExrp = findViewById(R.id.expr);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int responseCode, Intent result) {
+        super.onActivityResult(requestCode, responseCode, result);
+
+        SharedPreferences sharedPreferences = getSharedPreferences(prefs, MODE_PRIVATE);
+
+        if ( requestCode != CODE_SETTING ) {
+            super.onActivityResult(requestCode, responseCode, result);
+            return;
+        }
+        if ( responseCode == RESULT_OK) {
+            boolean theme = result.getBooleanExtra(KEY_NAME, false);
+            sharedPreferences.edit().
+                    putBoolean(pref_name, theme).apply();
+            recreate();
+        }
+    }
+
 
     @Override
     protected void onSaveInstanceState(Bundle state) {
@@ -75,6 +90,7 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
         state.putString(CALC_OPERATOR, mOperator);
         state.putString(CALC_RESULT, (String) mResult.getText());
         state.putInt(CALC_FLAG, mFlag);
+        state.putString(CALC_EXPR, (String) mExrp.getText());
     }
 
     @Override
@@ -85,6 +101,7 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
         mOperator   = state.getString(CALC_OPERATOR);
         mFlag       = state.getInt(CALC_FLAG);
         mResult.setText(state.getString(CALC_RESULT));
+        mExrp.setText(state.getString(CALC_EXPR));
     }
 
 
@@ -116,7 +133,6 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.button_clear:
                 clear();
                 break;
-
             case R.id.button_back:
                 mResult.setText(backSpace((String) mResult.getText()));
                 break;
@@ -125,9 +141,11 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.button_div:
             case R.id.button_mult:
                 setOperation((String) b.getText());
+                setExpression((String) b.getText());
                 break;
             case R.id.button_proc:
                 if(!mArg1.equals("") && !mArg1.equals("")) {
+                    setExpression((String) b.getText());
                     mArg2 =  Float.toString(Float.parseFloat((String) mResult.getText()) * Float.parseFloat(mArg1) / 100 );
                     mResult.setText(numberAction());
                     mArg1 = "";
@@ -137,6 +155,7 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.button_equal:
                 if(!mArg1.equals("") && !mArg1.equals("")) {
+                    setExpression((String) b.getText());
                     mArg2 = (String) mResult.getText();
                     mResult.setText(numberAction());
                     mArg1 = "";
@@ -144,27 +163,53 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
                     mOperator = "";
                 }
                 break;
+            case R.id.button_setting:
+                intentSetting(v);
+                break;
             default: break;
         }
 
     }
 
+    private void intentSetting(View v) {
+        Intent intent = new Intent(this, Setting.class);
+        intent.putExtra(KEY_NAME, isActiveBar);
+        startActivityForResult(intent, CODE_SETTING);
+    }
+
+
     private void clear() {
         mResult.setText("");
+        mExrp.setText("");
         mArg1 ="";
         mArg2 = "";
         mOperator = "";
     }
 
-    private void setOperation(String operator) {
+    private void setExpression(String operator) {
+        String res = mArg1 + " " +  mOperator + " " + (String) mResult.getText();
+        mExrp.setText( res );
+        if (operator.equals("=") ) {
+            mExrp.setText(res + " " + operator);
+        }
+        if (operator.equals("%")) {
+            mExrp.setText(res + operator + " =");
+        }
+    }
 
+    private void setOperation(String operator) {
         if ( !mArg1.equals("") && mArg2.equals("")) {
-            mArg2 = (String) mResult.getText();
-            mResult.setText(numberAction());
-            mArg1 = numberAction();
-            mArg2 = "";
-            mOperator = operator;
-            mFlag = 1;
+            try {
+                float ex = Float.valueOf((String) mResult.getText());
+                mArg2 = (String) mResult.getText();
+                mResult.setText("");
+                mArg1 = numberAction();
+                mArg2 = "";
+                mOperator = operator;
+                mFlag = 1;
+            } catch (NumberFormatException e) {
+                mOperator = operator;
+            }
             return;
         }
 
@@ -173,7 +218,7 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
             mOperator = operator;
             mResult.setText("");
             return;
-        }
+           }
 
     }
 
