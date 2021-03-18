@@ -6,23 +6,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="10dp"
-    android:weightSum="6"
+    android:weightSum="7"
     android:background="@drawable/background" >
 
-    <TextView
-        android:id="@+id/result"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:padding="10dp"
-        android:text=""
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:background="@drawable/my_border"
-        android:textSize="@dimen/key_text_size"
-        android:gravity="right"
-        android:textAlignment="gravity"
-        android:layout_margin="5dp"
-        android:lines="2"
-        android:layout_weight="1"
-        />
+        android:layout_margin="3dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/expr"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text=""
+            android:textSize="@dimen/key_text_size"
+            android:gravity="right"
+            android:textAlignment="gravity"
+            android:padding="5dp"
+            />
+        <TextView
+            android:id="@+id/result"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text=""
+            android:textSize="@dimen/key_text_size"
+            android:gravity="right"
+            android:textAlignment="gravity"
+            android:padding="5dp"
+            />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,22 +47,22 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_clear"
             android:text="@string/button_clear"
-            style="@style/Button"
+            style="@style/Button_landscape"
             />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_back"
             android:text="@string/button_back"
-            style="@style/Button"/>
+            style="@style/Button_landscape"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_proc"
             android:text="@string/button_proc"
-            style="@style/Button"/>
+            style="@style/Button_landscape"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_div"
             android:text="@string/button_div"
-            style="@style/Button"/>
+            style="@style/Button_landscape"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,22 +72,22 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button1"
             android:text="@string/button1"
-            style="@style/Button"
+            style="@style/Button_landscape"
             />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button2"
             android:text="@string/button2"
-            style="@style/Button"/>
+            style="@style/Button_landscape"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button3"
             android:text="@string/button3"
-            style="@style/Button"/>
+            style="@style/Button_landscape"/>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_mult"
             android:text="@string/button_mult"
-            style="@style/Button"/>
+            style="@style/Button_landscape"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -82,21 +97,21 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button4"
             android:text="@string/button4"
-            style="@style/Button"/>
+            style="@style/Button_landscape"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button5"
             android:text="@string/button5"
-            style="@style/Button"/>
+            style="@style/Button_landscape"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button6"
             android:text="@string/button6"
-            style="@style/Button"/>
+            style="@style/Button_landscape"/>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_minus"
             android:text="@string/button_minus"
-            style="@style/Button"/>
+            style="@style/Button_landscape"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -106,21 +121,21 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button7"
             android:text="@string/button7"
-            style="@style/Button"/>
+            style="@style/Button_landscape"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button8"
             android:text="@string/button8"
-            style="@style/Button"/>
+            style="@style/Button_landscape"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button9"
             android:text="@string/button9"
-            style="@style/Button"/>
+            style="@style/Button_landscape"/>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_plus"
             android:text="@string/button_plus"
-            style="@style/Button"/>
+            style="@style/Button_landscape"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -130,22 +145,29 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button0"
             android:text="@string/button0"
-            style="@style/Button"/>
+            style="@style/Button_landscape"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonPt"
             android:text="@string/buttonPt"
-            style="@style/Button"/>
+            style="@style/Button_landscape"/>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_equal"
             android:text="@string/button_equal"
-            style="@style/Button"/>
-        <Switch
-            android:id="@+id/switch_theme"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Theme" />
+            android:layout_width="10dp"
+            android:layout_weight="2"
+            style="@style/Button_landscape"/>
     </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_weight="1"
+        android:id="@+id/button_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/setting"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
+        android:layout_margin="3dp"
+        />
 
 </LinearLayout>
